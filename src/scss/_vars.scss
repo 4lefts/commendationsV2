@@ -1,0 +1,64 @@
+$bg: #e8e8e8;
+$primary: #01a9f4;
+$light: #67daff;
+$dark: #007ac1;
+$accent: #ff4081;
+
+$gutter: 10px;
+
+$fonts: 'Open Sans', Verdana, Geneva, sans-serif; 
+
+//shadows - from https://css-tricks.com/snippets/sass/material-shadows-mixin/
+//$depth takes a number 1 - 5 for the depth
+@mixin card($depth){
+	@if $depth < 1{
+		box-shadow: none;
+	} @else if $depth > 5{
+		@warn "invalid $depth for mixin 'card'";
+	} @else {
+		box-shadow: bottom-shadow($depth), top-shadow($depth);
+	}
+}
+
+//use these two functions in mixin above
+@function top-shadow($depth){
+	$primary-offset: nth(1.5 3 10 14 19, $depth) * 1px;
+	$blur: nth(1.5 3 10 14 19, $depth) * 4px;
+	$color: rgba(black, nth(.12 .16 .19 .25 .30, $depth));
+
+	@return 0 $primary-offset $blur $color;
+}
+
+@function bottom-shadow($depth){
+	$primary-offset: nth(1.5 3 6 10 15, $depth) * 1px;
+	$blur: nth(1.5 3 3 5 6, $depth) * 4px;
+	$color: rgba(black, nth(.24 .23 .23 .22 .22, $depth));
+
+	@return 0 $primary-offset $blur $color;
+}
+
+
+@mixin button-styles($colour, $textColour){
+    box-sizing: border-box;
+    height: 38px;
+    max-width: 200px;
+    padding: 0 30px;
+    color: rgba($textColour, 0.7);
+    background-color: $colour;
+    font-size: 0.8em;
+    text-shadow: 0 1px 3px rgba(black, 0.2);
+    line-height: 38px;
+    text-align: center;
+    white-space: nowrap;
+    text-transform: uppercase;
+    text-decoration: none;
+    cursor: pointer;
+    border: 1px solid $colour;
+    border-radius: 2px;
+    @include card(1);
+    transition: all .3s ease;
+    &:hover, &:focus{
+      outline: 0;
+      @include card(3);
+    }
+  }

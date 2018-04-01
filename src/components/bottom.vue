@@ -18,6 +18,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import '../scss/vars.scss';
+footer{
+    @include card(1);
+    background-color: white;
+    margin-top: $gutter;
+    padding: $gutter;
+}
 @media print {
     footer{
         display: none;

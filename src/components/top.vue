@@ -1,14 +1,13 @@
 <template>
     <header>
-        <template v-if="user">
-            <h3>Commendations</h3>
-            <span>Signed in as {{user.displayName}}</span>
-            <button v-on:click="signOut">Sign Out</button>
-        </template>
-        <template v-else>
-            <h3>Commendations</h3>
+        <div v-if="user">
+            <span>Signed in as {{user.displayName}}
+            <button v-on:click="signOut">Sign Out</button></span>
+        </div>
+        <div v-else>
             <span>Not signed in</span>
-        </template>
+        </div>
+        <h3>Decoy School Commendations</h3>
     </header>
 </template>
 
@@ -26,6 +25,42 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import '../scss/vars.scss';
+
+header{
+    @include card(1);
+    background-color: $primary;
+    margin-bottom: $gutter;
+    // padding: $gutterV $gutterH;
+    div{
+        background-color: $dark;
+        text-align: right;
+        padding: 5px 10px;
+    }
+}
+
+h3{
+    font-size: 1.6em;
+    padding: 1em 10px 0.6em 10px;
+}
+
+span{
+    font-size: 0.8em;
+    button {
+        margin-left: $gutter;
+    }
+}
+
+@supports (display: grid){
+    header{
+        // display: grid;
+        // grid-template-columns: 1fr max-content ;
+        // align-items: center;
+        // grid-gap: $gutterH;
+    }
+}
+
+
 @media print {
     header{
         display: none;

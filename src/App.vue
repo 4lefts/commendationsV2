@@ -3,38 +3,42 @@
     <top v-bind:user="user"/>
     <main v-if="user" class="main-screen">
       <commendation-form
+      v-show="false"
       v-bind:user="user"
       v-on:sendCommendation="send" />
-      <h2>My Commendations</h2>
       <section v-if="loading">Loading...</section>
       <section v-else-if="commendations.length > 0">
-        <div class="commendations-list">
-          <h3>This Week</h3> 
-          <button v-on:click="printAll">Print All</button>
-          <template v-for="commendation in thisWeek">
-            <commendation
-            v-bind:key="commendation['.key']"
-            v-bind:data="commendation"
-            v-bind:printList="printList"
-            v-on:print="print"
-            v-on:remove="remove" />
-          </template>
-        </div> 
-        <div class="commendations-list">
-          <h3>Previous</h3>
-          <template v-for="commendation in previous">
-            <commendation
-            v-bind:key="commendation['.key']"
-            v-bind:data="commendation"
-            v-bind:printList="printList"
-            v-on:print="print"
-            v-on:remove="remove" />
-          </template>
+        <h3>This Week</h3>
+        <button v-if="thisWeek.length > 0" v-on:click="printAll">Print All</button>
+        <div v-if="thisWeek.length > 0" class="commendations-list">
+          <commendation
+          v-for="commendation in thisWeek"
+          v-bind:key="commendation['.key']"
+          v-bind:data="commendation"
+          v-bind:printList="printList"
+          v-on:print="print"
+          v-on:remove="remove" />
+        </div>
+        <div v-else>
+          <span>You haven't made any commendations this week. Commend someone!</span>
+        </div>
+        <h3>Previous Weeks</h3>
+        <div v-if="previous.length > 0" class="commendations-list">
+          <commendation
+          v-for="commendation in previous"
+          v-bind:key="commendation['.key']"
+          v-bind:data="commendation"
+          v-bind:printList="printList"
+          v-on:print="print"
+          v-on:remove="remove" />
+        </div>
+        <div v-else>
+          <span>You have no previous commendations.</span>
         </div>
       </section>
       <section v-else>
         <span>You haven't made any commendations. Commend someone!</span>
-    </section>
+      </section>
     </main>
     <main v-else>
       <button v-on:click="signIn">Sign In</button>
@@ -126,9 +130,42 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import './scss/vars.scss';
+
 [v-cloak] > * {display: none}
 [v-cloack]::before {content: 'loading'}
 
+// some kind of display fallback here
+
+@supports (display: grid){
+  #app{
+    display: grid;
+    min-height: 100vh;
+    grid-template-rows: auto 1fr auto;
+  }
+  .commendations-list{
+    display: grid;
+    grid-gap: $gutter;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  }
+}
+
+#app{
+  background-color: $bg;
+  font-family: $fonts;
+}
+main{
+  padding: 0 $gutter;
+}
+h2{
+  font-size: 2.4em;
+
+}
+h3{
+  font-size: 2em;
+  border-bottom: 2px solid $primary;
+  margin-bottom: 0.4em;
+}
 @media print{
   h2, h3, button{
     display: none;

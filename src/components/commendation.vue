@@ -31,6 +31,14 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import '../scss/vars.scss';
+
+.display-commendation{
+    @include card(2);
+    background-color: white;
+    padding: $gutter;
+}
+
 @media screen {
     .display-commendation{
         display: block;
