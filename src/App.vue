@@ -22,7 +22,7 @@
         <div v-else>
           <span>You haven't made any commendations this week. Commend someone!</span>
         </div>
-        <h3>Previous Weeks</h3>
+        <h3>Previously</h3>
         <div v-if="previous.length > 0" class="commendations-list">
           <commendation
           v-for="commendation in previous"
@@ -40,9 +40,12 @@
         <span>You haven't made any commendations. Commend someone!</span>
       </section>
     </main>
-    <main v-else>
-      <button v-on:click="signIn">Sign In</button>
-      <img src="https://fillmurray.com/600/400" alt="background image">  
+    <main v-else class="login-screen">
+      <button v-on:click="signIn">
+      <!-- <img src="./assets/login.jpg" alt="background image">   -->
+      <span>Sign In</span>
+      </button>
+      <p>Please use a Decoy School staff account.</p>
     </main>
     <bottom />
   </div>
@@ -150,6 +153,43 @@ export default {
   }
 }
 
+.login-screen{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  button{
+    box-sizing: border-box;
+    width: 300px;
+    height: 300px;
+    margin-bottom: 30px;
+    padding: 0;
+    background: url('./assets/login.jpg');
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    border: 3px solid $primary;
+    border-radius: 50%;
+    overflow: hidden;
+    @include card(1);
+    transition: all .3s ease;
+    &:hover, &:focus{
+      outline: 0;
+      @include card(5);
+    }
+    span{
+      color: white;
+      display: inline-block;
+      width: 300px;
+      height: 50px;
+      line-height: 50px;
+      background-color: rgba($primary, 0.3);
+      font-size: 2em;
+      text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.24);
+    }
+  }
+}
+
 #app{
   background-color: $bg;
   font-family: $fonts;
@@ -167,8 +207,11 @@ h3{
   margin-bottom: 0.4em;
 }
 @media print{
-  h2, h3, button{
+  h2, h3, button, span{
     display: none;
+  }
+  .commendations-list{
+    display: block;
   }
 }
 </style>

@@ -1,8 +1,8 @@
 <template>
     <header>
         <div v-if="user">
-            <span>Signed in as {{user.displayName}}
-            <button v-on:click="signOut">Sign Out</button></span>
+            <span>Signed in as {{user.displayName}}</span>
+            <button v-on:click="signOut">Sign Out</button>
         </div>
         <div v-else>
             <span>Not signed in</span>
@@ -31,17 +31,25 @@ header{
     @include card(1);
     background-color: $primary;
     margin-bottom: $gutter;
-    // padding: $gutterV $gutterH;
+    color: white;
     div{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
         background-color: $dark;
+        height: 55px;
         text-align: right;
         padding: 5px 10px;
+        button{
+            @include button-styles(white, $text);
+        }
     }
 }
 
 h3{
     font-size: 1.6em;
-    padding: 1em 10px 0.6em 10px;
+    padding: 1.4em 10px 1em 10px;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.24);
 }
 
 span{
@@ -50,16 +58,6 @@ span{
         margin-left: $gutter;
     }
 }
-
-@supports (display: grid){
-    header{
-        // display: grid;
-        // grid-template-columns: 1fr max-content ;
-        // align-items: center;
-        // grid-gap: $gutterH;
-    }
-}
-
 
 @media print {
     header{

@@ -3,6 +3,7 @@ $primary: #01a9f4;
 $light: #67daff;
 $dark: #007ac1;
 $accent: #ff4081;
+$text: rgba(0, 0, 0, 0.875);
 
 $gutter: 10px;
 
@@ -39,26 +40,52 @@ $fonts: 'Open Sans', Verdana, Geneva, sans-serif;
 
 
 @mixin button-styles($colour, $textColour){
-    box-sizing: border-box;
-    height: 38px;
-    max-width: 200px;
-    padding: 0 30px;
-    color: rgba($textColour, 0.7);
-    background-color: $colour;
-    font-size: 0.8em;
-    text-shadow: 0 1px 3px rgba(black, 0.2);
-    line-height: 38px;
-    text-align: center;
-    white-space: nowrap;
-    text-transform: uppercase;
-    text-decoration: none;
-    cursor: pointer;
-    border: 1px solid $colour;
-    border-radius: 2px;
-    @include card(1);
-    transition: all .3s ease;
-    &:hover, &:focus{
-      outline: 0;
-      @include card(3);
-    }
+  box-sizing: border-box;
+  height: 38px;
+  max-width: 200px;
+  padding: 0 30px;
+  color: rgba($textColour, 0.7);
+  background-color: $colour;
+  font-size: 0.8em;
+  text-shadow: 0 1px 3px rgba(black, 0.2);
+  line-height: 38px;
+  text-align: center;
+  white-space: nowrap;
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
+  border: 1px solid $colour;
+  border-radius: 2px;
+  @include card(1);
+  transition: all .3s ease;
+  &:hover, &:focus{
+    outline: 0;
+    @include card(3);
   }
+}
+
+  
+@mixin button-styles($colour, $textColour){
+  box-sizing: border-box;
+  height: 38px;
+  max-width: 200px;
+  padding: 0 30px;
+  color: rgba($textColour, 0.7);
+  background-color: $colour;
+  // font-size: 0.8em;
+  text-shadow: 0 1px 3px rgba(black, 0.2);
+  line-height: 38px;
+  text-align: center;
+  white-space: nowrap;
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
+  border: 1px solid $colour;
+  border-radius: 2px;
+  @include card(1);
+  transition: all .3s ease;
+  &:hover, &:focus{
+    outline: 0;
+    @include card(3);
+  }
+}
