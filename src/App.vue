@@ -3,7 +3,7 @@
     <top v-bind:user="user"/>
     <main v-if="user" class="main-screen">
       <commendation-form
-      v-show="false"
+      v-show="true"
       v-bind:user="user"
       v-on:sendCommendation="send" />
       <section v-if="loading">Loading...</section>
@@ -17,7 +17,7 @@
           v-bind:data="commendation"
           v-bind:printList="printList"
           v-on:print="print"
-          v-on:remove="remove" />
+          v-on:remove="openDeleteModal" />
         </div>
         <div v-else>
           <span>You haven't made any commendations this week. Commend someone!</span>
@@ -30,7 +30,7 @@
           v-bind:data="commendation"
           v-bind:printList="printList"
           v-on:print="print"
-          v-on:remove="remove" />
+          v-on:remove="openDeleteModal" />
         </div>
         <div v-else>
           <span>You have no previous commendations.</span>
@@ -39,6 +39,23 @@
       <section v-else>
         <span>You haven't made any commendations. Commend someone!</span>
       </section>
+      <transition name="fade-in">
+        <div class="modal-outer" v-if="showDeleteModal">
+          <div class="modal-inner">
+            <p>Are you sure you want to delete this commendation?</p>
+            <div class="buttons">
+              <button v-on:click="remove">Yes</button>
+              <button v-on:click="showDeleteModal = false">No</button>
+            </div>
+          </div>
+        </div>
+      </transition>
+      <transition name="fade-up">
+        <message 
+        v-bind:isShowing="messageBoxShowing"
+        v-bind:message="message"
+        />
+      </transition>
     </main>
     <main v-else class="login-screen">
       <button v-on:click="signIn">
@@ -57,6 +74,7 @@ import top from './components/top.vue'
 import bottom from './components/bottom.vue'
 import commendationForm from './components/commendationForm.vue'
 import commendation from './components/commendation.vue'
+import message from './components/message.vue'
 
 export default {
   name: 'app',
@@ -64,7 +82,8 @@ export default {
     top,
     bottom,
     commendationForm,
-    commendation
+    commendation,
+    message,
   },
   data () {
     return {
@@ -72,7 +91,11 @@ export default {
       db: firebase.database(),
       loading: false,
       commendations: [],
-      printList: []
+      printList: [],
+      showDeleteModal: false,
+      removeKey: '',
+      messageBoxShowing: false,
+      message: '',
     }
   },
   methods: {
@@ -90,12 +113,27 @@ export default {
     },
     send(payload){
       console.log(`sending ${JSON.stringify(payload, null, 3)}`)
-      this.db.ref(`commendations/${this.user.uid}`).push(payload)  
+      this.db.ref(`commendations/${this.user.uid}`).push(payload, () => {
+        this.showMessage('Commendation Saved!')
+      })  
     },
-    remove(key){
-      this.db.ref(`commendations/${this.user.uid}`).child(key).remove()
-        .then(() => console.log(`${key} removed`))
+    remove(){
+      this.db.ref(`commendations/${this.user.uid}`).child(this.removeKey).remove()
+        .then(() => {
+          console.log(`${this.removeKey} removed`)
+          this.showDeleteModal = false
+          this.showMessage('Commendation Deleted!')
+        })
         .catch(err => console.err(err))
+    },
+    openDeleteModal(key){
+      this.removeKey = key
+      this.showDeleteModal = true
+    },
+    showMessage(msg){
+      this.message = msg
+      this.messageBoxShowing = true
+      setTimeout(() => this.messageBoxShowing = false, 2000)
     }
   },
   computed: {
@@ -205,6 +243,42 @@ h3{
   font-size: 2em;
   border-bottom: 2px solid $primary;
   margin-bottom: 0.4em;
+}
+button{
+  @include button-styles($primary, white);
+  margin-bottom: $gutter;
+}
+.modal-outer{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  .modal-inner{
+    @include card(3);
+    background-color: white;
+    padding: 40px;
+    .buttons{
+      padding-top: 20px;
+      display: flex;
+      width: 100%;
+      justify-content: space-around;
+      button{
+        @include button-styles($primary, white);
+        margin-bottom: 0;
+      }
+    }
+  }
+}
+.fade-in-enter-active, .fade-in-leave-active {
+  transition: opacity .3s;
+}
+.fade-in-enter, .fade-in-leave-to{
+  opacity: 0;
 }
 @media print{
   h2, h3, button, span{

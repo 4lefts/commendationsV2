@@ -41,7 +41,7 @@ header{
         text-align: right;
         padding: 5px 10px;
         button{
-            @include button-styles(white, $text);
+            @include button-styles($primary, white);
         }
     }
 }
