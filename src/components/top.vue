@@ -28,9 +28,9 @@ export default {
 @import '../scss/vars.scss';
 
 header{
+    z-index: 1;
     @include card(1);
     background-color: $primary;
-    margin-bottom: $gutter;
     color: white;
     div{
         display: flex;
@@ -41,7 +41,7 @@ header{
         text-align: right;
         padding: 5px 10px;
         button{
-            @include button-styles($primary, white);
+            @include button-styles($accent, white);
         }
     }
 }

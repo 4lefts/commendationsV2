@@ -18,11 +18,12 @@ export default {
     opacity: 0;
     transition: all 0.3s;
     transform: translateY(100px);
-    position: absolute;
+    position: fixed;
     z-index: 100;
     bottom: 0;
     left: 0;
     background-color: $accent;
+    border-radius: 2px;
     color: white;
     margin: 20px;
     padding: 20px;

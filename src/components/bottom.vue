@@ -20,9 +20,10 @@ export default {
 <style lang="scss" scoped>
 @import '../scss/vars.scss';
 footer{
+    z-index: 1;
     @include card(1);
-    background-color: white;
-    margin-top: $gutter;
+    background-color: $dark;
+    color: white;
     padding: $gutter;
 }
 @media print {

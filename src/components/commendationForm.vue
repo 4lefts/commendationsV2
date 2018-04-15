@@ -1,34 +1,39 @@
 <template>
-  <section class="commendation-form">
-      <h2>Make a Commendation</h2>
-        <input v-model="newCommendation.name" type="text" placeholder="Name" required />
-        <select v-model="newCommendation.className" placeholder="Class" required>
-            <option value="" disabled>Class</option>
-            <option value="Butterflies">Butterflies</option>
-            <option value="Ladybirds">Ladybirds</option>
-            <option value="Woodpeckers">Woodpeckers</option>
-            <option value="Wrens">Wrens</option>
-            <option value="Chaffinches">Chaffinches</option>
-            <option value="Partridges">Partridges</option>
-            <option value="Puffins">Puffins</option>
-            <option value="Swans">Swans</option>
-            <option value="Kingfishers">Kingfishers</option>
-            <option value="Mallards">Mallards</option>
-            <option value="Kestrels">Kestrels</option>
-            <option value="Owls">Owls</option>
-            <option value="Eagles">Eagles</option>
-            <option value="Falcons">Falcons</option>
-        </select> 
-        <textarea v-model="newCommendation.reason" placeholder="Reason" required></textarea>
-        <transition name="slide-down">
-            <div class="invalid" v-show="isInvalid">Please complete all fields.</div>
-        </transition>
-        <p><strong>Please note</strong>, the system does <strong>not</strong> add the word "for" to the beginning of the reason when certificates are printed. If you'd like your commendation to start with "for", please add it manually.</p>
-        <button v-if="halibut" v-on:click="send" class="halibutton">
-            <img src="../assets/halibut.png" alt="a picture of a halibut">
-        </button>
-        <button v-else v-on:click="send" class="normal-button">Submit</button>
-  </section>
+<transition name="fade-in">
+    <div class="form-outer" v-on:click="$emit('closeForm')">
+        <div class="form-inner" v-on:click.stop>
+        <button v-on:click="$emit('closeForm')"><img src="../assets/close.svg" alt="close form"></button>
+        <h2>Make a Commendation</h2>
+            <input v-model="newCommendation.name" type="text" placeholder="Name" required />
+            <select v-model="newCommendation.className" placeholder="Class" required>
+                <option value="" disabled>Class</option>
+                <option value="Butterflies">Butterflies</option>
+                <option value="Ladybirds">Ladybirds</option>
+                <option value="Woodpeckers">Woodpeckers</option>
+                <option value="Wrens">Wrens</option>
+                <option value="Chaffinches">Chaffinches</option>
+                <option value="Partridges">Partridges</option>
+                <option value="Puffins">Puffins</option>
+                <option value="Swans">Swans</option>
+                <option value="Kingfishers">Kingfishers</option>
+                <option value="Mallards">Mallards</option>
+                <option value="Kestrels">Kestrels</option>
+                <option value="Owls">Owls</option>
+                <option value="Eagles">Eagles</option>
+                <option value="Falcons">Falcons</option>
+            </select> 
+            <textarea v-model="newCommendation.reason" placeholder="Reason" required></textarea>
+            <transition name="slide-down">
+                <div class="invalid" v-show="isInvalid">Please complete all fields.</div>
+            </transition>
+            <p><strong>Please note</strong>, the system does <strong>not</strong> add the word "for" to the beginning of the reason when certificates are printed. If you'd like your commendation to start with "for", please add it manually.</p>
+            <button v-if="halibut" v-on:click="send" class="halibutton">
+                <img src="../assets/halibut.png" alt="a picture of a halibut">
+            </button>
+            <button v-else v-on:click="send" class="normal-button">Submit</button>
+        </div>
+    </div>
+</transition>
 </template>
 
 <script>
@@ -147,6 +152,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import '../scss/vars.scss';
+
 input, select, textarea{
     display: block;
     width: 100%;
@@ -165,6 +172,40 @@ textarea{
     }
 }
 
+.form-outer{
+  z-index: 10;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  .form-inner{
+    @include card(3);
+    background-color: white;
+    border-radius: 2px;
+    padding: 40px;
+    .buttons{
+      padding-top: 20px;
+      display: flex;
+      width: 100%;
+      justify-content: space-around;
+      button{
+        @include button-styles($primary, white);
+        margin-bottom: 0;
+      }
+    }
+  }
+}
+.fade-in-enter-active, .fade-in-leave-active {
+  transition: all .5s ease;
+}
+.fade-in-enter, .fade-in-leave-to{
+  opacity: 0;
+  transform: translateX(-2000px);
+}
 @media print {
     .commendation-form{
         display: none;

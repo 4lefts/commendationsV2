@@ -1,15 +1,17 @@
 <template>
-  <div id="app" v-cloak>
+  <div id="app" v-cloak v-on:keyup.esc="showDeleteModal = false; showForm = false">
     <top v-bind:user="user"/>
     <main v-if="user" class="main-screen">
+      <button id="show-form-btn" v-on:click="showForm = true"><img src="./assets/create.svg" alt="create a commendation"></button>
       <commendation-form
-      v-show="true"
+      v-show="showForm"
       v-bind:user="user"
+      v-on:closeForm="showForm = false"
       v-on:sendCommendation="send" />
       <section v-if="loading">Loading...</section>
       <section v-else-if="commendations.length > 0">
         <h3>This Week</h3>
-        <button v-if="thisWeek.length > 0" v-on:click="printAll">Print All</button>
+        <button id="print-all-btn" v-if="thisWeek.length > 0" v-on:click="printAll">Print All</button>
         <div v-if="thisWeek.length > 0" class="commendations-list">
           <commendation
           v-for="commendation in thisWeek"
@@ -58,11 +60,11 @@
       </transition>
     </main>
     <main v-else class="login-screen">
-      <button v-on:click="signIn">
-      <!-- <img src="./assets/login.jpg" alt="background image">   -->
-      <span>Sign In</span>
-      </button>
-      <p>Please use a Decoy School staff account.</p>
+      <div class="login-contents">
+        <p>Hello. Welcome to the Decoy School Commendations app.</p>
+        <button v-on:click="signIn">Sign In</button>
+        <p>Please use a Decoy School staff account.</p>
+      </div>
     </main>
     <bottom />
   </div>
@@ -93,6 +95,7 @@ export default {
       commendations: [],
       printList: [],
       showDeleteModal: false,
+      showForm: false,
       removeKey: '',
       messageBoxShowing: false,
       message: '',
@@ -114,6 +117,7 @@ export default {
     send(payload){
       console.log(`sending ${JSON.stringify(payload, null, 3)}`)
       this.db.ref(`commendations/${this.user.uid}`).push(payload, () => {
+        this.showForm = false
         this.showMessage('Commendation Saved!')
       })  
     },
@@ -176,7 +180,7 @@ export default {
 [v-cloak] > * {display: none}
 [v-cloack]::before {content: 'loading'}
 
-// some kind of display fallback here
+// some kind of display fallback here?
 
 @supports (display: grid){
   #app{
@@ -188,42 +192,34 @@ export default {
     display: grid;
     grid-gap: $gutter;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    margin: 30px 0;
   }
 }
 
 .login-screen{
   display: flex;
+  background: url('./assets/loginBG.jpg') no-repeat center center fixed;
+  background-size: cover;
   align-items: center;
   justify-content: center;
-  flex-direction: column;
-  button{
-    box-sizing: border-box;
+  .login-contents{
+    @include card(3);
+    background-color:rgba(255, 255, 255, 0.7);
     width: 300px;
     height: 300px;
-    margin-bottom: 30px;
-    padding: 0;
-    background: url('./assets/login.jpg');
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
     text-align: center;
-    text-decoration: none;
-    cursor: pointer;
-    border: 3px solid $primary;
-    border-radius: 50%;
-    overflow: hidden;
-    @include card(1);
-    transition: all .3s ease;
-    &:hover, &:focus{
-      outline: 0;
-      @include card(5);
+    flex-direction: column;
+    button{
+      @include button-styles($primary, white);
+      width: 200px;
+      margin: 0;
     }
-    span{
-      color: white;
-      display: inline-block;
-      width: 300px;
-      height: 50px;
-      line-height: 50px;
-      background-color: rgba($primary, 0.3);
-      font-size: 2em;
-      text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.24);
+    p {
+      margin: 0;
     }
   }
 }
@@ -232,8 +228,8 @@ export default {
   background-color: $bg;
   font-family: $fonts;
 }
-main{
-  padding: 0 $gutter;
+.main-screen{
+  padding: 30px $gutter;
 }
 h2{
   font-size: 2.4em;
@@ -242,14 +238,35 @@ h2{
 h3{
   font-size: 2em;
   border-bottom: 2px solid $primary;
-  margin-bottom: 0.4em;
+  margin: 0.3em 0 0.4em 0;
+  padding-bottom: 0.1em; 
 }
-button{
+#print-all-btn{
   @include button-styles($primary, white);
-  margin-bottom: $gutter;
+}
+#show-form-btn{
+  z-index: 2;
+  @include button-styles($accent, white);
+  @include card(3);
+   &:hover, &:focus{
+    outline: 0;
+    @include card(5);
+  }
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  margin: 30px;
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
 }
 .modal-outer{
-  position: absolute;
+  z-index: 10;
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
@@ -261,6 +278,7 @@ button{
   .modal-inner{
     @include card(3);
     background-color: white;
+    border-radius: 2px;
     padding: 40px;
     .buttons{
       padding-top: 20px;

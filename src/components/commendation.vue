@@ -41,6 +41,7 @@ export default {
 
 .display-commendation{
     @include card(2);
+    border-radius: 2px;
     background-color: white;
     color: $text;
     h3{
