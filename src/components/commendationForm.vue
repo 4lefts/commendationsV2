@@ -1,8 +1,8 @@
 <template>
 <transition name="fade-in">
-    <div class="form-outer" v-on:click="$emit('closeForm')">
+    <div class="form-outer" v-on:click="$emit('closeForm'); isInvalid = false">
         <div class="form-inner" v-on:click.stop>
-        <button v-on:click="$emit('closeForm')"><img src="../assets/close.svg" alt="close form"></button>
+        <button id="form-close-btn" v-on:click="$emit('closeForm'); isInvalid = false"><img src="../assets/close.svg" alt="close form"></button>
         <h2>Make a Commendation</h2>
             <input v-model="newCommendation.name" type="text" placeholder="Name" required />
             <select v-model="newCommendation.className" placeholder="Class" required>
@@ -23,8 +23,8 @@
                 <option value="Falcons">Falcons</option>
             </select> 
             <textarea v-model="newCommendation.reason" placeholder="Reason" required></textarea>
-            <transition name="slide-down">
-                <div class="invalid" v-show="isInvalid">Please complete all fields.</div>
+            <transition name="slide-fade">
+                <p class="invalid" v-show="isInvalid"><strong>Please complete all fields.</strong></p>
             </transition>
             <p><strong>Please note</strong>, the system does <strong>not</strong> add the word "for" to the beginning of the reason when certificates are printed. If you'd like your commendation to start with "for", please add it manually.</p>
             <button v-if="halibut" v-on:click="send" class="halibutton">
@@ -124,7 +124,7 @@ export default {
     },
     computed: {
         halibut(){
-            if(this.user) return this.user.uid === 'raHK8Phs9PRhZ9DV7x53Yc4fct43' || this.user.uid === 'AgyXQthkIVfLn64p5NSm0ANkxGs2'
+            if(this.user) return this.user.uid === 'raHK8Phs9PRhZ9DV7x53Yc4fct43' //|| this.user.uid === 'AgyXQthkIVfLn64p5NSm0ANkxGs2'
             else return false
         }
     },
@@ -154,24 +154,6 @@ export default {
 <style lang="scss" scoped>
 @import '../scss/vars.scss';
 
-input, select, textarea{
-    display: block;
-    width: 100%;
-    margin: 10px 0;
-}
-
-textarea{
-    height: 120px;
-}
-
-.halibutton{
-    width: 50px;
-    height: 50px;
-    img{
-        width: 100%;
-    }
-}
-
 .form-outer{
   z-index: 10;
   position: fixed;
@@ -183,21 +165,79 @@ textarea{
   align-items: center;
   justify-content: center;
   .form-inner{
-    @include card(3);
+    @include card(5);
+    max-width: 600px;
+    margin: $gutter;
     background-color: white;
     border-radius: 2px;
     padding: 40px;
-    .buttons{
-      padding-top: 20px;
-      display: flex;
-      width: 100%;
-      justify-content: space-around;
-      button{
-        @include button-styles($primary, white);
-        margin-bottom: 0;
-      }
-    }
+    display: flex;
+    flex-direction: column;
+    align-content: center;
   }
+}
+h2{
+    font-size: 2em;
+    border-bottom: 2px solid $primary;
+    margin: 0.3em 0 0.4em 0;
+    padding-bottom: 0.1em; 
+}
+input, select, textarea{
+    font-family: $fonts;
+    font-size: 1em;
+    display: block;
+    width: 100%;
+    margin: 10px 0;
+    padding: $gutter;
+    border: 1.6px solid $bg;
+    border-radius: 2px;
+    outline: none;
+    background-color: $bg;
+    &:focus{
+        border: 1.6px solid $primary;
+        background-color: white;
+    }
+}
+textarea{
+    height: 170px;
+}
+.normal-button{
+    @include button-styles($primary, white);
+    margin-top: $gutter;
+    width: 120px;
+}
+.halibutton{
+    @include button-styles($primary, white);
+    width: 70px;
+    height: 70px;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    margin-top: $gutter;
+    &:hover, &:focus{
+        outline: 0;
+        @include card(5);
+        transform: scale(1.1);
+    }
+}
+#form-close-btn{
+    @include button-styles($primary, white);
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    align-self: flex-end;
+}
+p{
+    margin: 0.6em 0 0.6em 0;
+}
+.invalid{
+    color: $accent;
 }
 .fade-in-enter-active, .fade-in-leave-active {
   transition: all .5s ease;
@@ -206,6 +246,14 @@ textarea{
   opacity: 0;
   transform: translateX(-2000px);
 }
+.slide-fade-enter-active, .slide-fade-leave-active {
+  transition: all .3s ease;
+}
+.slide-fade-enter, .slide-fade-leave-to{
+  transform: translateY(-20px);
+  opacity: 0;
+}
+
 @media print {
     .commendation-form{
         display: none;

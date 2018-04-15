@@ -146,7 +146,14 @@ export default {
     },
     sunday(){
       const d = new Date()
-      return d.setDate(d.getDate() - d.getDay())
+      const day = d.getDay()
+      const diff = day % 7
+      d.setDate(d.getDate() - diff)
+      d.setHours(0)
+      d.setMinutes(0)
+      d.setSeconds(0)
+      d.setMilliseconds(0)
+      return d.getTime()
     },
     thisWeek(){
       return this.reversedCommendations.filter(c => c.timestamp >= this.sunday) 
@@ -170,7 +177,7 @@ export default {
         this.loading = false
       }
     })
-  }
+  },
 }
 </script>
 
@@ -190,7 +197,7 @@ export default {
   }
   .commendations-list{
     display: grid;
-    grid-gap: $gutter;
+    grid-gap: 20px;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     margin: 30px 0;
   }
@@ -243,14 +250,16 @@ h3{
 }
 #print-all-btn{
   @include button-styles($primary, white);
+  margin-top: $gutter;
 }
 #show-form-btn{
   z-index: 2;
   @include button-styles($accent, white);
-  @include card(3);
+  @include card(2);
    &:hover, &:focus{
     outline: 0;
     @include card(5);
+    transform: scale(1.1);
   }
   position: fixed;
   right: 0;
