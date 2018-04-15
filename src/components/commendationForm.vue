@@ -1,8 +1,8 @@
 <template>
 <transition name="fade-in">
-    <div class="form-outer" v-on:click="$emit('closeForm'); isInvalid = false">
+    <div class="form-outer" v-on:click="closeForm">
         <div class="form-inner" v-on:click.stop>
-        <button id="form-close-btn" v-on:click="$emit('closeForm'); isInvalid = false"><img src="../assets/close.svg" alt="close form"></button>
+        <button id="form-close-btn" v-on:click="closeForm"><img src="../assets/close.svg" alt="close form"></button>
         <h2>Make a Commendation</h2>
             <input v-model="newCommendation.name" type="text" placeholder="Name" required />
             <select v-model="newCommendation.className" placeholder="Class" required>
@@ -146,6 +146,10 @@ export default {
                 Object.keys(this.newCommendation).forEach(key => this.newCommendation[key] = '')
             }
         },
+        closeForm(){
+            this.$emit('closeForm')
+            this.isInvalid = false
+        }
     }
 }
 
