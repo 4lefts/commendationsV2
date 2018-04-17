@@ -4,7 +4,7 @@
         <div class="form-inner" v-on:click.stop>
         <button id="form-close-btn" v-on:click="closeForm"><img src="../assets/close.svg" alt="close form"></button>
         <h2>Make a Commendation</h2>
-            <input v-model="newCommendation.name" type="text" placeholder="Name" required />
+            <input v-model="newCommendation.name" type="text" placeholder="Name" required autofocus/>
             <select v-model="newCommendation.className" placeholder="Class" required>
                 <option value="" disabled>Class</option>
                 <option value="Butterflies">Butterflies</option>

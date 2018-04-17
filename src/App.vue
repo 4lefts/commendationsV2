@@ -10,7 +10,7 @@
       v-on:sendCommendation="send" />
       <section v-if="loading">Loading...</section>
       <section v-else-if="commendations.length > 0">
-        <h3>This Week</h3>
+        <h2>This Week</h2>
         <button id="print-all-btn" v-if="thisWeek.length > 0" v-on:click="printAll">Print All</button>
         <div v-if="thisWeek.length > 0" class="commendations-list">
           <commendation
@@ -24,10 +24,11 @@
         <div v-else>
           <span>You haven't made any commendations this week. Commend someone!</span>
         </div>
-        <h3>Previously</h3>
+        <h2>Previously</h2>
+        <input id="name-filter" type="text" v-model="nameFilter" placeholder="Filter by name">
         <div v-if="previous.length > 0" class="commendations-list">
           <commendation
-          v-for="commendation in previous"
+          v-for="commendation in filteredPrevious"
           v-bind:key="commendation['.key']"
           v-bind:data="commendation"
           v-bind:printList="printList"
@@ -99,6 +100,7 @@ export default {
       removeKey: '',
       messageBoxShowing: false,
       message: '',
+      nameFilter: '',
     }
   },
   methods: {
@@ -160,6 +162,13 @@ export default {
     },
     previous(){
       return this.reversedCommendations.filter(c => c.timestamp < this.sunday)
+    },
+    filteredPrevious(){
+      const query = this.nameFilter.trim().toLowerCase()
+      return this.previous.filter(c => {
+        const n = c.name.trim().toLowerCase()
+        return n.includes(query)
+      })
     }
 
   },
@@ -198,7 +207,8 @@ export default {
   .commendations-list{
     display: grid;
     grid-gap: 20px;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
+    // grid-auto-rows: 1fr;
     margin: 30px 0;
   }
 }
@@ -239,10 +249,6 @@ export default {
   padding: 30px $gutter;
 }
 h2{
-  font-size: 2.4em;
-
-}
-h3{
   font-size: 2em;
   border-bottom: 2px solid $primary;
   margin: 0.3em 0 0.4em 0;
@@ -251,6 +257,21 @@ h3{
 #print-all-btn{
   @include button-styles($primary, white);
   margin-top: $gutter;
+}
+#name-filter{
+  font-family: $fonts;
+  font-size: 1em;
+  width: 300px;
+  margin-top: $gutter;
+  padding: $gutter;
+  border: 1.6px solid white;
+  border-radius: 2px;
+  outline: none;
+  background-color: white;
+  &:focus{
+    border: 1.6px solid $primary;
+    background-color: white;
+  }
 }
 #show-form-btn{
   z-index: 2;
